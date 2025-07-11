@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Phone, Mail, MapPin, Clock } from 'lucide-react'
+import { Phone, Mail, MapPin, Clock } from "lucide-react"
 import ReCAPTCHA from "react-google-recaptcha"
 import { StarterKitPopup } from "@/components/starter-kit-popup"
 
@@ -28,6 +28,7 @@ export default function ContactPage() {
   const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitMessage, setSubmitMessage] = useState("")
+  const [errorDetails, setErrorDetails] = useState("")
   const [showStarterKitPopup, setShowStarterKitPopup] = useState(false)
 
   const handleInterestChange = (interest: string, checked: boolean) => {
@@ -49,11 +50,13 @@ export default function ContactPage() {
 
     if (!recaptchaToken) {
       setSubmitMessage("Please complete the reCAPTCHA")
+      setErrorDetails("")
       return
     }
 
     setIsSubmitting(true)
     setSubmitMessage("")
+    setErrorDetails("")
 
     try {
       const response = await fetch("/api/send-email", {
@@ -66,6 +69,8 @@ export default function ContactPage() {
           recaptchaToken,
         }),
       })
+
+      const data = await response.json()
 
       if (response.ok) {
         setSubmitMessage("Thank you for your inquiry! We'll be in touch within 24 hours.")
@@ -81,10 +86,14 @@ export default function ContactPage() {
         })
         setRecaptchaToken(null)
       } else {
-        setSubmitMessage("Failed to send message. Please try again or call us directly.")
+        setSubmitMessage(data.error || "Failed to send message. Please try again or call us directly.")
+        setErrorDetails(data.details || data.fullError || "")
+        console.error("Server error:", data)
       }
     } catch (error) {
-      setSubmitMessage("An error occurred. Please try again or call us directly.")
+      setSubmitMessage("Network error. Please check your connection and try again.")
+      setErrorDetails(error instanceof Error ? error.message : String(error))
+      console.error("Network error:", error)
     } finally {
       setIsSubmitting(false)
     }
@@ -231,10 +240,17 @@ export default function ContactPage() {
                   </div>
 
                   {submitMessage && (
-                    <div
-                      className={`text-center text-sm ${submitMessage.includes("Thank you") ? "text-green-600" : "text-red-600"}`}
-                    >
-                      {submitMessage}
+                    <div className="space-y-2">
+                      <div
+                        className={`text-center text-sm ${submitMessage.includes("Thank you") ? "text-green-600" : "text-red-600"}`}
+                      >
+                        {submitMessage}
+                      </div>
+                      {errorDetails && (
+                        <div className="text-xs text-gray-500 text-center bg-gray-50 p-2 rounded">
+                          <strong>Technical details:</strong> {errorDetails}
+                        </div>
+                      )}
                     </div>
                   )}
 
