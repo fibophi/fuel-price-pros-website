@@ -21,8 +21,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "reCAPTCHA verification failed" }, { status: 400 })
     }
 
-    // Create transporter
-    const transporter = nodemailer.createTransporter({
+    // Create transporter - FIXED THE TYPO HERE TOO
+    const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
         user: process.env.EMAIL_USER,
