@@ -4,24 +4,37 @@ import nodemailer from "nodemailer"
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { name, company, email, recaptchaToken } = body
+    const { name, company, email } = body
 
-    // Verify reCAPTCHA
-    const recaptchaResponse = await fetch("https://www.google.com/recaptcha/api/siteverify", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: `secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${recaptchaToken}`,
-    })
+    // Get current timestamp
+    const timestamp = new Date().toISOString()
 
-    const recaptchaData = await recaptchaResponse.json()
-
-    if (!recaptchaData.success) {
-      return NextResponse.json({ error: "reCAPTCHA verification failed" }, { status: 400 })
+    // Save to Google Sheets (we'll add this data to a Google Sheet)
+    const sheetData = {
+      timestamp,
+      name,
+      company,
+      email,
+      source: "Starter Kit Request",
     }
 
-    // Create transporter - FIXED THE TYPO HERE TOO
+    // Send to Google Sheets
+    if (process.env.GOOGLE_SHEETS_WEBHOOK_URL) {
+      try {
+        await fetch(process.env.GOOGLE_SHEETS_WEBHOOK_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(sheetData),
+        })
+      } catch (sheetError) {
+        console.error("Failed to save to Google Sheets:", sheetError)
+        // Continue anyway - don't fail the whole request
+      }
+    }
+
+    // Create transporter
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -30,92 +43,87 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    // Email to you (notification)
+    // Email to you (notification with all details)
     const notificationEmail = {
       from: process.env.EMAIL_USER,
       to: "trincoinc@gmail.com",
-      subject: `Fuel Savings Starter Kit Request from ${name} - ${company}`,
+      subject: `🚛 NEW Starter Kit Request from ${name} - ${company}`,
       html: `
-        <h2>New Starter Kit Request</h2>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Company:</strong> ${company}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <hr>
-        <p><em>Submitted from fuelprice.pro starter kit form</em></p>
+        <h2>🚛 New Fuel Savings Starter Kit Request</h2>
+        <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+          <p><strong>📅 Date:</strong> ${new Date().toLocaleDateString()}</p>
+          <p><strong>👤 Name:</strong> ${name}</p>
+          <p><strong>🏢 Company:</strong> ${company}</p>
+          <p><strong>📧 Email:</strong> ${email}</p>
+          <p><strong>📋 Source:</strong> Starter Kit Request Form</p>
+        </div>
+        
+        <div style="background-color: #fff3cd; padding: 15px; border-radius: 8px; border-left: 4px solid #ffc107;">
+          <h3>⏰ Action Required:</h3>
+          <p>Send the Fuel Savings Starter Kit to <strong>${email}</strong> within 48 hours.</p>
+        </div>
+        
+        <hr style="margin: 30px 0;">
+        <p style="color: #666; font-size: 12px;"><em>Submitted from fuelprice.pro starter kit form</em></p>
       `,
     }
 
-    // Email to user (with starter kit)
+    // Email to user (confirmation)
     const userEmail = {
       from: process.env.EMAIL_USER,
       to: email,
-      subject: "Your Fuel Savings Starter Kit - Fuel Price Pros",
+      subject: "Your Fuel Savings Starter Kit is Coming! - Fuel Price Pros",
       html: `
-        <h2>Thank you for your interest, ${name}!</h2>
-        <p>Here's your Fuel Savings Starter Kit with proven strategies to reduce your fleet's fuel costs:</p>
-        
-        <h3>🚛 10 Proven Strategies to Cut Fuel Costs:</h3>
-        <ol>
-          <li><strong>Switch to a fleet fuel card</strong> - Save 15-25¢ per gallon instantly</li>
-          <li><strong>Optimize routes</strong> - Use GPS routing to avoid traffic and find shortest paths</li>
-          <li><strong>Train drivers on fuel-efficient techniques</strong> - Proper acceleration/deceleration saves 5-10%</li>
-          <li><strong>Maintain proper tire pressure</strong> - Under-inflated tires reduce MPG by up to 3%</li>
-          <li><strong>Regular engine maintenance</strong> - Clean air filters and oil changes improve efficiency</li>
-          <li><strong>Reduce idle time</strong> - Limit idling to save up to $1,000 per truck annually</li>
-          <li><strong>Use cruise control</strong> - Maintains steady speed and improves highway MPG</li>
-          <li><strong>Plan fuel stops strategically</strong> - Buy fuel at lowest-cost locations on your route</li>
-          <li><strong>Monitor fuel consumption</strong> - Track MPG to identify issues early</li>
-          <li><strong>Consider aerodynamic upgrades</strong> - Trailer skirts and fairings can improve MPG by 5-10%</li>
-        </ol>
-
-        <h3>📋 Driver Training Checklist:</h3>
-        <ul>
-          <li>☐ Gradual acceleration and deceleration techniques</li>
-          <li>☐ Optimal cruising speeds (55-65 mph for best efficiency)</li>
-          <li>☐ Proper gear shifting for manual transmissions</li>
-          <li>☐ When and how to use cruise control</li>
-          <li>☐ Minimizing idle time and engine warm-up</li>
-          <li>☐ Route planning and traffic avoidance</li>
-          <li>☐ Pre-trip inspection for fuel efficiency</li>
-        </ul>
-
-        <h3>🗺️ Route Optimization Worksheet:</h3>
-        <p><strong>For each regular route, track:</strong></p>
-        <ul>
-          <li>Current miles and fuel consumption</li>
-          <li>Alternative route options</li>
-          <li>Traffic patterns and optimal departure times</li>
-          <li>Fuel stop locations and pricing</li>
-          <li>Potential savings per trip</li>
-        </ul>
-
-        <h3>💳 Fuel Card Comparison Guide:</h3>
-        <p><strong>Questions to ask fuel card providers:</strong></p>
-        <ul>
-          <li>What's the discount per gallon at major truck stops?</li>
-          <li>Are there transaction fees or monthly fees?</li>
-          <li>How many locations are in your network?</li>
-          <li>Do you offer additional services (maintenance, tires, etc.)?</li>
-          <li>What reporting and tracking tools are included?</li>
-          <li>Is there a minimum purchase requirement?</li>
-        </ul>
-
-        <hr>
-        <p>Ready to implement these strategies? <a href="https://fuelprice.pro/contact">Contact us</a> for a free consultation!</p>
-        
-        <p>Best regards,<br>
-        The Fuel Price Pros Team<br>
-        📧 info@fuelprice.pro<br>
-        📞 647-362-6649</p>
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="background-color: #002F6C; color: white; padding: 30px; text-align: center;">
+            <h1>🚛 Thank You, ${name}!</h1>
+            <p style="font-size: 18px; margin: 0;">Your Fuel Savings Starter Kit is on the way</p>
+          </div>
+          
+          <div style="padding: 30px; background-color: #f8f9fa;">
+            <h2 style="color: #002F6C;">What happens next?</h2>
+            
+            <div style="background-color: white; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #FF6B00;">
+              <h3 style="color: #FF6B00; margin-top: 0;">📧 Within 48 hours</h3>
+              <p>We'll send you our comprehensive Fuel Savings Starter Kit directly to this email address.</p>
+            </div>
+            
+            <h3 style="color: #002F6C;">Your starter kit will include:</h3>
+            <ul style="line-height: 1.8;">
+              <li>🚛 <strong>10 proven strategies</strong> to cut fuel costs immediately</li>
+              <li>📋 <strong>Driver training checklist</strong> for fuel-efficient driving</li>
+              <li>🗺️ <strong>Route optimization worksheet</strong> to find savings</li>
+              <li>💳 <strong>Fuel card comparison guide</strong> with key questions to ask</li>
+              <li>📊 <strong>Savings calculator</strong> to estimate your potential savings</li>
+              <li>🔧 <strong>Maintenance tips</strong> that improve MPG</li>
+            </ul>
+            
+            <div style="background-color: #e8f5e8; padding: 20px; border-radius: 8px; margin: 30px 0;">
+              <h3 style="color: #28a745; margin-top: 0;">💰 Quick Win While You Wait:</h3>
+              <p><strong>Check your tire pressure today!</strong> Under-inflated tires can reduce your MPG by up to 3%. That's an easy $50-100 savings per month per truck.</p>
+            </div>
+          </div>
+          
+          <div style="background-color: #002F6C; color: white; padding: 20px; text-align: center;">
+            <h3>Questions? Need immediate help?</h3>
+            <p>📞 Call us: <strong>647-362-6649</strong></p>
+            <p>📧 Email us: <strong>info@fuelprice.pro</strong></p>
+            <p>🌐 Visit: <strong>fuelprice.pro</strong></p>
+          </div>
+          
+          <div style="padding: 20px; text-align: center; color: #666; font-size: 12px;">
+            <p>This email was sent because you requested our Fuel Savings Starter Kit from fuelprice.pro</p>
+          </div>
+        </div>
       `,
     }
 
     await transporter.sendMail(notificationEmail)
     await transporter.sendMail(userEmail)
 
-    return NextResponse.json({ success: true, message: "Starter kit sent successfully" })
+    return NextResponse.json({ success: true, message: "Request submitted successfully" })
   } catch (error) {
-    console.error("Error sending starter kit:", error)
-    return NextResponse.json({ error: "Failed to send starter kit" }, { status: 500 })
+    console.error("Error processing starter kit request:", error)
+    return NextResponse.json({ error: "Failed to submit request" }, { status: 500 })
   }
 }
