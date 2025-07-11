@@ -305,9 +305,9 @@ export default function ContactPage() {
 
               <Card className="bg-gradient-to-br from-navy to-navy/90 text-white">
                 <CardHeader>
-                  <CardTitle>Fuel Savings Starter Kit</CardTitle>
+                  <CardTitle>Free Fuel Savings Starter Kit</CardTitle>
                   <CardDescription className="text-blue-100">
-                    Download our comprehensive guide to reducing fuel costs
+                    Get our comprehensive guide delivered within 48 hours
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -316,10 +316,12 @@ export default function ContactPage() {
                     <li>• Driver training checklist</li>
                     <li>• Route optimization worksheet</li>
                     <li>• Fuel card comparison guide</li>
+                    <li>• Savings calculator & maintenance tips</li>
                   </ul>
                   <Button className="w-full bg-orange hover:bg-orange/90" onClick={() => setShowStarterKitPopup(true)}>
-                    Click here to get the kit!
+                    Request Your Free Kit
                   </Button>
+                  <p className="text-xs text-blue-200 mt-2 text-center">No spam, delivered within 48 hours</p>
                 </CardContent>
               </Card>
 
