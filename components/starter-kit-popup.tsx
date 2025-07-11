@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import ReCAPTCHA from "react-google-recaptcha"
 
 interface StarterKitPopupProps {
   isOpen: boolean
@@ -20,17 +19,11 @@ export function StarterKitPopup({ isOpen, onClose }: StarterKitPopupProps) {
     company: "",
     email: "",
   })
-  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [message, setMessage] = useState("")
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
-    if (!recaptchaToken) {
-      setMessage("Please complete the reCAPTCHA")
-      return
-    }
 
     setIsSubmitting(true)
     setMessage("")
@@ -41,22 +34,18 @@ export function StarterKitPopup({ isOpen, onClose }: StarterKitPopupProps) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          ...formData,
-          recaptchaToken,
-        }),
+        body: JSON.stringify(formData),
       })
 
       if (response.ok) {
-        setMessage("Success! Check your email for the Fuel Savings Starter Kit.")
+        setMessage("Success! You'll receive your Fuel Savings Starter Kit within 48 hours.")
         setFormData({ name: "", company: "", email: "" })
-        setRecaptchaToken(null)
         setTimeout(() => {
           onClose()
           setMessage("")
         }, 3000)
       } else {
-        setMessage("Failed to send starter kit. Please try again.")
+        setMessage("Failed to submit request. Please try again.")
       }
     } catch (error) {
       setMessage("An error occurred. Please try again.")
@@ -67,11 +56,11 @@ export function StarterKitPopup({ isOpen, onClose }: StarterKitPopupProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md z-50">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-navy">Get Your Fuel Savings Starter Kit</DialogTitle>
           <DialogDescription>
-            Enter your details below to receive our comprehensive fuel savings guide via email.
+            Enter your details below and we'll send you our comprehensive fuel savings guide within 48 hours.
           </DialogDescription>
         </DialogHeader>
 
@@ -107,16 +96,6 @@ export function StarterKitPopup({ isOpen, onClose }: StarterKitPopupProps) {
             />
           </div>
 
-          <div className="flex justify-center">
-            <div style={{ zIndex: 9999 }}>
-              <ReCAPTCHA
-                sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""}
-                onChange={setRecaptchaToken}
-                style={{ zIndex: 9999 }}
-              />
-            </div>
-          </div>
-
           {message && (
             <div className={`text-center text-sm ${message.includes("Success") ? "text-green-600" : "text-red-600"}`}>
               {message}
@@ -127,39 +106,12 @@ export function StarterKitPopup({ isOpen, onClose }: StarterKitPopupProps) {
             <Button type="button" variant="outline" onClick={onClose} className="flex-1 bg-transparent">
               Cancel
             </Button>
-            <Button
-              type="submit"
-              disabled={isSubmitting || !recaptchaToken}
-              className="flex-1 bg-orange hover:bg-orange/90"
-            >
-              {isSubmitting ? "Sending..." : "Get Kit"}
+            <Button type="submit" disabled={isSubmitting} className="flex-1 bg-orange hover:bg-orange/90">
+              {isSubmitting ? "Submitting..." : "Request Kit"}
             </Button>
           </div>
         </form>
       </DialogContent>
-
-      {/* Add custom CSS to ensure reCAPTCHA appears on top */}
-      <style jsx global>{`
-        .grecaptcha-badge {
-          z-index: 10000 !important;
-        }
-        
-        iframe[src*="recaptcha"] {
-          z-index: 10000 !important;
-        }
-        
-        div[style*="z-index: 2000000000"] {
-          z-index: 10000 !important;
-        }
-        
-        div[style*="z-index: 2000000001"] {
-          z-index: 10001 !important;
-        }
-        
-        div[style*="z-index: 2000000002"] {
-          z-index: 10002 !important;
-        }
-      `}</style>
     </Dialog>
   )
 }
