@@ -67,7 +67,7 @@ export function StarterKitPopup({ isOpen, onClose }: StarterKitPopupProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md z-50">
         <DialogHeader>
           <DialogTitle className="text-navy">Get Your Fuel Savings Starter Kit</DialogTitle>
           <DialogDescription>
@@ -108,7 +108,13 @@ export function StarterKitPopup({ isOpen, onClose }: StarterKitPopupProps) {
           </div>
 
           <div className="flex justify-center">
-            <ReCAPTCHA sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""} onChange={setRecaptchaToken} />
+            <div style={{ zIndex: 9999 }}>
+              <ReCAPTCHA
+                sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""}
+                onChange={setRecaptchaToken}
+                style={{ zIndex: 9999 }}
+              />
+            </div>
           </div>
 
           {message && (
@@ -131,6 +137,29 @@ export function StarterKitPopup({ isOpen, onClose }: StarterKitPopupProps) {
           </div>
         </form>
       </DialogContent>
+
+      {/* Add custom CSS to ensure reCAPTCHA appears on top */}
+      <style jsx global>{`
+        .grecaptcha-badge {
+          z-index: 10000 !important;
+        }
+        
+        iframe[src*="recaptcha"] {
+          z-index: 10000 !important;
+        }
+        
+        div[style*="z-index: 2000000000"] {
+          z-index: 10000 !important;
+        }
+        
+        div[style*="z-index: 2000000001"] {
+          z-index: 10001 !important;
+        }
+        
+        div[style*="z-index: 2000000002"] {
+          z-index: 10002 !important;
+        }
+      `}</style>
     </Dialog>
   )
 }
