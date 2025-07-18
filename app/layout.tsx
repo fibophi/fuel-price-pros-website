@@ -1,3 +1,4 @@
+// Force deployment - updated images
 import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
@@ -11,7 +12,6 @@ export const metadata: Metadata = {
   title: "Fuel Price Pros - Big Fleet Discounts for Growing Operations",
   description:
     "Helping growing fleets and owner-operators access big fleet savings with smart tactics and smarter tech. Fuel cards, consulting, and aerodynamic upgrades.",
-    generator: 'v0.dev'
 }
 
 export default function RootLayout({
