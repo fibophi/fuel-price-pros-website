@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { CheckCircle, BarChart3, Truck, ArrowRight, Star } from "lucide-react"
+import { CheckCircle, BarChart3, Truck, ArrowRight, Star } from 'lucide-react'
 import Link from "next/link"
 import Image from "next/image"
 import { useState, useEffect } from "react"
@@ -135,8 +135,8 @@ export default function HomePage() {
             </div>
             <div className="relative">
               <Image
-                src="/images/hero-truck-savings.png"
-                alt="Modern truck with savings visualization"
+                src="/images/fuel-handle-orange-drops.png"
+                alt="Fuel nozzle with orange drops representing fuel savings and discounts"
                 width={600}
                 height={400}
                 className="rounded-lg shadow-2xl"
@@ -196,7 +196,7 @@ export default function HomePage() {
       </section>
 
       {/* Success Stories Preview */}
-      <section className="py-24 px-4">
+      <section className="py-24 px-4 bg-gray-50">
         <div className="container mx-auto max-w-6xl pb-24">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-bold text-navy mb-4">Real Results from Real Fleets</h2>
