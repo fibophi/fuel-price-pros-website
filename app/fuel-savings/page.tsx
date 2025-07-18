@@ -43,7 +43,7 @@ export default function FuelSavingsPage() {
                   <DollarSign className="h-4 w-4 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-navy mb-2">Average 15-25¢ CPM SAVINGS!</h3>
+                  <h3 className="text-xl font-semibold text-navy mb-2">Average 15-25¢ CPM Discounts</h3>
                   <p className="text-gray-600">
                     Consistent savings that add up to thousands per month for growing fleets.
                   </p>
@@ -65,8 +65,8 @@ export default function FuelSavingsPage() {
 
             <div className="relative">
               <Image
-                src="/placeholder.svg?height=400&width=500"
-                alt="Fuel card network map"
+                src="/images/TA-Station-Map.png"
+                alt="TA and Petro fuel station network map across North America"
                 width={500}
                 height={400}
                 className="rounded-lg shadow-lg"
@@ -76,8 +76,42 @@ export default function FuelSavingsPage() {
         </div>
       </section>
 
-      {/* Retail vs Discount Table */}
+      {/* Fuel Savings Visual */}
       <section className="py-16 px-4 bg-gray-50">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl lg:text-4xl font-bold text-navy mb-4">Every Drop Counts</h2>
+            <p className="text-xl text-gray-600">Small discounts per gallon add up to massive annual savings</p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div className="relative">
+              <Image
+                src="/images/fuel-handle-orange-drops.png"
+                alt="Fuel nozzle with orange fuel drops representing savings"
+                width={400}
+                height={500}
+                className="mx-auto"
+              />
+            </div>
+            <div className="space-y-6">
+              <div className="bg-white p-6 rounded-lg shadow-lg border-l-4 border-orange">
+                <h3 className="text-2xl font-bold text-navy mb-2">25¢ per gallon discount</h3>
+                <p className="text-gray-600 mb-4">On a truck averaging 6 MPG, driving 10,000 miles per month:</p>
+                <div className="text-3xl font-bold text-orange">$417/month saved</div>
+                <div className="text-lg text-gray-600">$5,000+ per year per truck</div>
+              </div>
+              <div className="bg-gradient-to-r from-green-50 to-green-100 p-6 rounded-lg border border-green-200">
+                <h4 className="text-lg font-semibold text-green-800 mb-2">Fleet of 5 trucks?</h4>
+                <div className="text-2xl font-bold text-green-700">$25,000+ annual savings</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Retail vs Discount Table */}
+      <section className="py-16 px-4">
         <div className="container mx-auto max-w-4xl">
           <h2 className="text-3xl lg:text-4xl font-bold text-navy text-center mb-12">See the Difference</h2>
 
@@ -117,7 +151,7 @@ export default function FuelSavingsPage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-16 px-4">
+      <section className="py-16 px-4 bg-gray-50">
         <div className="container mx-auto max-w-4xl">
           <h2 className="text-3xl lg:text-4xl font-bold text-navy text-center mb-12">Frequently Asked Questions</h2>
 
