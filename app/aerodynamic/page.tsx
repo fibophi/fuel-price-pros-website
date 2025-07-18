@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { ArrowRight, Zap, DollarSign, TrendingUp, CheckCircle } from "lucide-react"
+import { ArrowRight, Zap, DollarSign, TrendingUp, CheckCircle } from 'lucide-react'
 import Link from "next/link"
 import Image from "next/image"
 
@@ -21,8 +21,73 @@ export default function AerodynamicPage() {
         </div>
       </section>
 
-      {/* What We Supply */}
+      {/* The Science Behind Aerodynamics */}
       <section className="py-16 px-4">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl lg:text-4xl font-bold text-navy mb-4">The Science Behind the Savings</h2>
+            <p className="text-xl text-gray-600">
+              Computational fluid dynamics shows exactly how aerodynamic improvements reduce drag
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div className="space-y-6">
+              <div className="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-lg">
+                <h3 className="text-xl font-semibold text-navy mb-3">What You're Looking At:</h3>
+                <ul className="space-y-2 text-gray-700">
+                  <li>
+                    • <strong className="text-blue-600">Top truck:</strong> Standard configuration with maximum drag
+                  </li>
+                  <li>
+                    • <strong className="text-green-600">Middle truck:</strong> Partial aerodynamic improvements
+                  </li>
+                  <li>
+                    • <strong className="text-green-700">Bottom truck:</strong> Full aerodynamic package with minimal
+                    drag
+                  </li>
+                  <li>
+                    • <strong className="text-red-600">Red/orange areas:</strong> Wasted fuel from air turbulence
+                  </li>
+                </ul>
+              </div>
+
+              <div className="bg-orange-50 border-l-4 border-orange p-6 rounded-r-lg">
+                <h3 className="text-xl font-semibold text-navy mb-3">The Bottom Line:</h3>
+                <p className="text-gray-700">
+                  Every red zone behind your truck is wasted fuel. Our aerodynamic equipment converts those high-drag
+                  areas into smooth, fuel-saving airflow.
+                </p>
+              </div>
+
+              <div className="bg-green-50 border-l-4 border-green-500 p-6 rounded-r-lg">
+                <h3 className="text-xl font-semibold text-navy mb-3">Real-World Impact:</h3>
+                <p className="text-gray-700">
+                  <strong>5-11% MPG improvement</strong> translates to <strong>$3,500-8,000+ annual savings</strong> per
+                  truck.
+                </p>
+              </div>
+            </div>
+
+            <div className="relative">
+              <Image
+                src="/images/aerodynami-improvements-graphic.png"
+                alt="Aerodynamic comparison showing three truck configurations: standard truck with high drag, partially improved truck, and fully optimized truck with minimal drag"
+                width={600}
+                height={700}
+                className="rounded-lg shadow-lg border border-gray-200"
+              />
+              <div className="absolute -bottom-4 -right-4 bg-navy text-white p-4 rounded-lg shadow-lg">
+                <div className="text-sm font-semibold">CFD Analysis</div>
+                <div className="text-xs text-blue-200">Progressive Improvement</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* What We Supply */}
+      <section className="py-16 px-4 bg-gray-50">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-bold text-navy mb-4">What We Supply</h2>
@@ -85,48 +150,6 @@ export default function AerodynamicPage() {
 
           <div className="text-center mt-8">
             <p className="text-gray-600 italic">More aerodynamic solutions coming soon!</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Before & After */}
-      <section className="py-16 px-4 bg-gray-50">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-navy mb-4">See the Difference</h2>
-            <p className="text-xl text-gray-600">Visual impact of our aerodynamic upgrades</p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-              <h3 className="text-2xl font-semibold text-navy mb-4">Before: Standard Configuration</h3>
-              <Image
-                src="/placeholder.svg?height=300&width=500"
-                alt="Standard truck configuration"
-                width={500}
-                height={300}
-                className="rounded-lg shadow-lg mb-4"
-              />
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                <div className="text-red-700 font-semibold">Baseline MPG: 6.2</div>
-                <div className="text-red-600 text-sm">Higher drag coefficient</div>
-              </div>
-            </div>
-
-            <div>
-              <h3 className="text-2xl font-semibold text-navy mb-4">After: Aerodynamic Upgrades</h3>
-              <Image
-                src="/placeholder.svg?height=300&width=500"
-                alt="Truck with aerodynamic upgrades"
-                width={500}
-                height={300}
-                className="rounded-lg shadow-lg mb-4"
-              />
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                <div className="text-green-700 font-semibold">Improved MPG: 6.8</div>
-                <div className="text-green-600 text-sm">9.7% improvement</div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
