@@ -135,7 +135,7 @@ export default function HomePage() {
             </div>
             <div className="relative">
               <Image
-                src="/placeholder.svg?height=400&width=600"
+                src="/images/hero-truck-savings.png"
                 alt="Modern truck with savings visualization"
                 width={600}
                 height={400}
