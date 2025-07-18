@@ -43,7 +43,7 @@ export default function FuelSavingsPage() {
                   <DollarSign className="h-4 w-4 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-navy mb-2">Average 15-25¢ CPM Discounts</h3>
+                  <h3 className="text-xl font-semibold text-navy mb-2">Average 15-25¢ CPM SAVINGS!</h3>
                   <p className="text-gray-600">
                     Consistent savings that add up to thousands per month for growing fleets.
                   </p>
