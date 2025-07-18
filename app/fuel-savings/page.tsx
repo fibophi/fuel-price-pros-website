@@ -89,7 +89,7 @@ export default function FuelSavingsPage() {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="relative">
               <Image
-                src="/images/esso-cardlock-station.webp"
+                src="/images/Esso-Cardlock-station-fs-md.webp"
                 alt="Esso Commercial Cardlock station with multiple trucks fueling at night, showing professional fleet fueling infrastructure"
                 width={600}
                 height={400}
