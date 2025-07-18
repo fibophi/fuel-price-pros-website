@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Users, Target, Award, TrendingUp, ArrowRight } from "lucide-react"
+import { Users, Target, Award, TrendingUp, ArrowRight } from 'lucide-react'
 import Link from "next/link"
 import Image from "next/image"
 
@@ -61,8 +61,8 @@ export default function AboutPage() {
 
             <div className="relative">
               <Image
-                src="/placeholder.svg?height=400&width=500"
-                alt="FleetSaver team"
+                src="/images/fpp-truckstop-night-shot.png"
+                alt="Fuel Price Pros branded truck stop at night - representing our commitment to the industry"
                 width={500}
                 height={400}
                 className="rounded-lg shadow-lg"
