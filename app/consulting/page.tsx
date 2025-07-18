@@ -124,8 +124,8 @@ export default function ConsultingPage() {
 
             <div className="relative">
               <Image
-                src="/placeholder.svg?height=400&width=500"
-                alt="Fleet consulting and route analysis"
+                src="/images/night-road-truck.jpg"
+                alt="Night road trucking - driver's perspective showing professional fleet operations"
                 width={500}
                 height={400}
                 className="rounded-lg shadow-lg"
