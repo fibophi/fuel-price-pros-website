@@ -329,7 +329,7 @@ export default function ContactPage() {
                 <CardContent className="p-6">
                   <div className="text-center">
                     <div className="text-2xl font-bold text-navy mb-2">Average Fleet Savings</div>
-                    <div className="text-4xl font-bold text-orange mb-2">$2,100</div>
+                    <div className="text-4xl font-bold text-orange mb-2">$8,100</div>
                     <div className="text-gray-600">per truck per year</div>
                   </div>
                 </CardContent>
