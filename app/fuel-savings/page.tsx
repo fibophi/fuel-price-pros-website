@@ -76,23 +76,29 @@ export default function FuelSavingsPage() {
         </div>
       </section>
 
-      {/* Fuel Savings Visual */}
+      {/* Commercial Fueling Environment */}
       <section className="py-16 px-4 bg-gray-50">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-navy mb-4">Every Drop Counts</h2>
-            <p className="text-xl text-gray-600">Small discounts per gallon add up to massive annual savings</p>
+            <h2 className="text-3xl lg:text-4xl font-bold text-navy mb-4">Professional Fleet Fueling</h2>
+            <p className="text-xl text-gray-600">
+              Access to commercial cardlock stations designed for fleet operations
+            </p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="relative">
               <Image
-                src="/images/fuel-handle-orange-drops.png"
-                alt="Fuel nozzle with orange fuel drops representing savings"
-                width={400}
-                height={500}
-                className="mx-auto"
+                src="/images/esso-cardlock-station.webp"
+                alt="Esso Commercial Cardlock station with multiple trucks fueling at night, showing professional fleet fueling infrastructure"
+                width={600}
+                height={400}
+                className="rounded-lg shadow-lg"
               />
+              <div className="absolute -bottom-4 -right-4 bg-navy text-white p-4 rounded-lg shadow-lg">
+                <div className="text-sm font-semibold">24/7 Access</div>
+                <div className="text-xs text-blue-200">Commercial Cardlock</div>
+              </div>
             </div>
             <div className="space-y-6">
               <div className="bg-white p-6 rounded-lg shadow-lg border-l-4 border-orange">
