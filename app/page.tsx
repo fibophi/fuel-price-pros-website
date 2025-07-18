@@ -7,6 +7,7 @@ import { CheckCircle, BarChart3, Truck, ArrowRight, Star } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { useState, useEffect } from "react"
+import { SavingsCalculator } from "@/components/savings-calculator"
 
 const testimonials = [
   {
@@ -110,6 +111,8 @@ function TestimonialsSlider() {
 }
 
 export default function HomePage() {
+  const [showCalculator, setShowCalculator] = useState(false)
+
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
@@ -126,11 +129,13 @@ export default function HomePage() {
                   tech.
                 </p>
               </div>
-              <Button size="lg" className="bg-orange hover:bg-orange/90 text-white px-8 py-4 text-lg" asChild>
-                <Link href="#calculator">
-                  See How Much You Can Save
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
+              <Button
+                size="lg"
+                className="bg-orange hover:bg-orange/90 text-white px-8 py-4 text-lg"
+                onClick={() => setShowCalculator(true)}
+              >
+                See How Much You Can Save
+                <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </div>
             <div className="relative">
@@ -308,6 +313,9 @@ export default function HomePage() {
           <p className="text-lg text-gray-600 font-medium">Trusted by fleets across North America</p>
         </div>
       </section>
+
+      {/* Savings Calculator Modal */}
+      <SavingsCalculator isOpen={showCalculator} onClose={() => setShowCalculator(false)} />
     </div>
   )
 }
