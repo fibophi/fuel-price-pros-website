@@ -1,4 +1,4 @@
-// Force deployment - added Google Analytics
+// Fixed - moved Analytics to head section for Search Console verification
 import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
@@ -23,12 +23,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <Analytics />
+      </head>
       <body className={inter.className}>
         <Suspense fallback={<div>Loading...</div>}>
           <Navigation />
           <main>{children}</main>
           <Footer />
-          <Analytics />
         </Suspense>
       </body>
     </html>
