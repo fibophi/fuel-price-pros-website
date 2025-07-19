@@ -13,6 +13,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Phone, Mail, MapPin, Clock } from "lucide-react"
 import ReCAPTCHA from "react-google-recaptcha"
 import { StarterKitPopup } from "@/components/starter-kit-popup"
+import { event } from "@/lib/gtag"
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -73,6 +74,14 @@ export default function ContactPage() {
       const data = await response.json()
 
       if (response.ok) {
+        // Track successful form submission
+        event({
+          action: "form_submit",
+          category: "Contact",
+          label: "Contact Form",
+          value: 1,
+        })
+
         setSubmitMessage("Thank you for your inquiry! We'll be in touch within 24 hours.")
         setFormData({
           name: "",
@@ -318,7 +327,19 @@ export default function ContactPage() {
                     <li>• Fuel card comparison guide</li>
                     <li>• Savings calculator & maintenance tips</li>
                   </ul>
-                  <Button className="w-full bg-orange hover:bg-orange/90" onClick={() => setShowStarterKitPopup(true)}>
+                  <Button
+                    className="w-full bg-orange hover:bg-orange/90"
+                    onClick={() => {
+                      // Track starter kit button click
+                      event({
+                        action: "click",
+                        category: "Starter Kit",
+                        label: "Request Kit Button",
+                        value: 1,
+                      })
+                      setShowStarterKitPopup(true)
+                    }}
+                  >
                     Request Your Free Kit
                   </Button>
                   <p className="text-xs text-blue-200 mt-2 text-center">No spam, delivered within 48 hours</p>
@@ -329,7 +350,7 @@ export default function ContactPage() {
                 <CardContent className="p-6">
                   <div className="text-center">
                     <div className="text-2xl font-bold text-navy mb-2">Average Fleet Savings</div>
-                    <div className="text-4xl font-bold text-orange mb-2">$8,100</div>
+                    <div className="text-4xl font-bold text-orange mb-2">$2,100</div>
                     <div className="text-gray-600">per truck per year</div>
                   </div>
                 </CardContent>
