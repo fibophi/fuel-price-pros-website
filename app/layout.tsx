@@ -1,4 +1,4 @@
-// Fixed - moved Analytics to head section for Search Console verification
+// Added Google Search Console verification meta tag
 import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
@@ -14,6 +14,9 @@ export const metadata: Metadata = {
   title: "Fuel Price Pros - Big Fleet Discounts for Growing Operations",
   description:
     "Helping growing fleets and owner-operators access big fleet savings with smart tactics and smarter tech. Fuel cards, consulting, and aerodynamic upgrades.",
+  verification: {
+    google: "z-IHbVHwO_KNtsF_3gPMiVCit89IgQ4YUkTDPJeLcrE",
+  },
 }
 
 export default function RootLayout({
