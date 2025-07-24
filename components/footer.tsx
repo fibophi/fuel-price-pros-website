@@ -21,16 +21,16 @@ export function Footer() {
 
           {/* Quick Links */}
           <div className="space-y-4">
-            <h3 className="font-semibold text-lg">Services</h3>
+            <h3 className="font-semibold text-lg">Our Services</h3>
             <div className="space-y-2 text-sm">
               <Link href="/fuel-savings" className="block text-blue-100 hover:text-white transition-colors">
-                Fuel Savings
+                Fuel Card Discounts
               </Link>
               <Link href="/consulting" className="block text-blue-100 hover:text-white transition-colors">
-                Consulting
+                Fleet Consulting
               </Link>
               <Link href="/aerodynamic" className="block text-blue-100 hover:text-white transition-colors">
-                Aerodynamic Add-Ons
+                Aerodynamic Equipment
               </Link>
             </div>
           </div>
