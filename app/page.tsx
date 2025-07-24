@@ -161,41 +161,49 @@ export default function HomePage() {
       <section className="py-16 px-4 bg-gray-50">
         <div className="container mx-auto max-w-6xl">
           <div className="grid md:grid-cols-3 gap-8">
-            <Card className="text-center border-2 hover:border-orange transition-colors">
-              <CardHeader>
-                <div className="mx-auto w-16 h-16 bg-navy/10 rounded-full flex items-center justify-center mb-4">
-                  <CheckCircle className="h-8 w-8 text-navy" />
-                </div>
-                <CardTitle className="text-navy">Fuel Cards With National Discounts</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">Access wholesale pricing at thousands of locations across North America</p>
-              </CardContent>
-            </Card>
+            <Link href="/fuel-savings">
+              <Card className="text-center border-2 hover:border-orange transition-colors cursor-pointer">
+                <CardHeader>
+                  <div className="mx-auto w-16 h-16 bg-navy/10 rounded-full flex items-center justify-center mb-4">
+                    <CheckCircle className="h-8 w-8 text-navy" />
+                  </div>
+                  <CardTitle className="text-navy">Fuel Cards With National Discounts</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600">
+                    Access wholesale pricing at thousands of locations across North America
+                  </p>
+                </CardContent>
+              </Card>
+            </Link>
 
-            <Card className="text-center border-2 hover:border-orange transition-colors">
-              <CardHeader>
-                <div className="mx-auto w-16 h-16 bg-navy/10 rounded-full flex items-center justify-center mb-4">
-                  <BarChart3 className="h-8 w-8 text-navy" />
-                </div>
-                <CardTitle className="text-navy">Consulting to Cut Costs & Improve MPG</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">Expert analysis and driver training to maximize your fuel efficiency</p>
-              </CardContent>
-            </Card>
+            <Link href="/consulting">
+              <Card className="text-center border-2 hover:border-orange transition-colors cursor-pointer">
+                <CardHeader>
+                  <div className="mx-auto w-16 h-16 bg-navy/10 rounded-full flex items-center justify-center mb-4">
+                    <BarChart3 className="h-8 w-8 text-navy" />
+                  </div>
+                  <CardTitle className="text-navy">Consulting to Cut Costs & Improve MPG</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600">Expert analysis and driver training to maximize your fuel efficiency</p>
+                </CardContent>
+              </Card>
+            </Link>
 
-            <Card className="text-center border-2 hover:border-orange transition-colors">
-              <CardHeader>
-                <div className="mx-auto w-16 h-16 bg-navy/10 rounded-full flex items-center justify-center mb-4">
-                  <Truck className="h-8 w-8 text-navy" />
-                </div>
-                <CardTitle className="text-navy">Aerodynamic Upgrades That Pay for Themselves</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">Proven equipment that delivers measurable MPG improvements</p>
-              </CardContent>
-            </Card>
+            <Link href="/aerodynamic">
+              <Card className="text-center border-2 hover:border-orange transition-colors cursor-pointer">
+                <CardHeader>
+                  <div className="mx-auto w-16 h-16 bg-navy/10 rounded-full flex items-center justify-center mb-4">
+                    <Truck className="h-8 w-8 text-navy" />
+                  </div>
+                  <CardTitle className="text-navy">Aerodynamic Upgrades That Pay for Themselves</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600">Proven equipment that delivers measurable MPG improvements</p>
+                </CardContent>
+              </Card>
+            </Link>
           </div>
         </div>
       </section>
