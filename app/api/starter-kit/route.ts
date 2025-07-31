@@ -1,10 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server"
-
-// Only import nodemailer on the server side
-let nodemailer: any = null
-if (typeof window === "undefined") {
-  nodemailer = require("nodemailer")
-}
+import nodemailer from "nodemailer"
 
 export async function POST(request: NextRequest) {
   try {
@@ -21,11 +16,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: "Email service unavailable" }, { status: 500 })
     }
 
-    // Create transporter (only on server)
-    if (!nodemailer) {
-      return NextResponse.json({ success: false, error: "Email service unavailable" }, { status: 500 })
-    }
-
+    // Create transporter
     const transporter = nodemailer.createTransporter({
       service: "gmail",
       auth: {
