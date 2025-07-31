@@ -2,31 +2,19 @@ import { type NextRequest, NextResponse } from "next/server"
 import nodemailer from "nodemailer"
 
 export async function POST(request: NextRequest) {
-  console.log("=== STARTER KIT API CALLED ===")
-
   try {
     const body = await request.json()
-    console.log("✅ Request parsed:", body)
-
     const { name, company, email } = body
 
     // Validate required fields
     if (!name || !company || !email) {
-      console.log("❌ Missing fields")
       return NextResponse.json({ success: false, error: "Missing required fields" }, { status: 400 })
     }
-    console.log("✅ All fields present")
 
     // Check email credentials
-    const hasEmailUser = !!process.env.EMAIL_USER
-    const hasEmailPass = !!process.env.EMAIL_PASS
-    console.log("Email credentials check:", { hasEmailUser, hasEmailPass })
-
-    if (!hasEmailUser || !hasEmailPass) {
-      console.log("❌ Missing email credentials")
-      return NextResponse.json({ success: false, error: "Email credentials missing" }, { status: 500 })
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+      return NextResponse.json({ success: false, error: "Email service unavailable" }, { status: 500 })
     }
-    console.log("✅ Email credentials found")
 
     // Create transporter
     const transporter = nodemailer.createTransporter({
@@ -36,47 +24,31 @@ export async function POST(request: NextRequest) {
         pass: process.env.EMAIL_PASS,
       },
     })
-    console.log("✅ Transporter created")
 
     // Verify connection
-    try {
-      await transporter.verify()
-      console.log("✅ Email connection verified")
-    } catch (verifyError) {
-      console.log("❌ Email verification failed:", verifyError)
-      return NextResponse.json({ success: false, error: "Email connection failed" }, { status: 500 })
-    }
+    await transporter.verify()
 
-    // Get current timestamp
-    const timestamp = new Date().toISOString()
-
-    // Try to save to Google Sheets (if webhook exists)
+    // Save to Google Sheets if webhook exists
     if (process.env.GOOGLE_SHEETS_WEBHOOK_URL) {
       try {
-        console.log("Attempting to save to Google Sheets...")
-        const sheetData = {
-          timestamp,
-          name,
-          company,
-          email,
-          source: "Starter Kit Request",
-        }
-
-        const sheetResponse = await fetch(process.env.GOOGLE_SHEETS_WEBHOOK_URL, {
+        await fetch(process.env.GOOGLE_SHEETS_WEBHOOK_URL, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(sheetData),
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            timestamp: new Date().toISOString(),
+            name,
+            company,
+            email,
+            source: "Starter Kit Request",
+          }),
         })
-        console.log("Google Sheets response status:", sheetResponse.status)
       } catch (sheetError) {
-        console.error("Google Sheets error (continuing anyway):", sheetError)
+        console.error("Google Sheets error:", sheetError)
       }
     }
 
     // Send notification email
-    const notificationEmail = {
+    await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: "trincoinc@gmail.com",
       subject: `🚛 NEW Starter Kit Request from ${name} - ${company}`,
@@ -99,10 +71,10 @@ export async function POST(request: NextRequest) {
         <hr style="margin: 30px 0;">
         <p style="color: #666; font-size: 12px;"><em>Submitted from fuelprice.pro starter kit form</em></p>
       `,
-    }
+    })
 
     // Send user confirmation email
-    const userEmail = {
+    await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: email,
       subject: "Your Fuel Savings Starter Kit is Coming! - Fuel Price Pros",
@@ -149,27 +121,14 @@ export async function POST(request: NextRequest) {
           </div>
         </div>
       `,
-    }
+    })
 
-    console.log("Sending notification email...")
-    await transporter.sendMail(notificationEmail)
-    console.log("✅ Notification email sent")
-
-    console.log("Sending user confirmation email...")
-    await transporter.sendMail(userEmail)
-    console.log("✅ User confirmation email sent")
-
-    console.log("🎉 STARTER KIT REQUEST COMPLETED SUCCESSFULLY")
-
-    return NextResponse.json(
-      {
-        success: true,
-        message: "Request submitted successfully",
-      },
-      { status: 200 },
-    )
+    return NextResponse.json({
+      success: true,
+      message: "Request submitted successfully",
+    })
   } catch (error) {
-    console.error("💥 STARTER KIT ERROR:", error)
+    console.error("Starter kit error:", error)
     return NextResponse.json(
       {
         success: false,
