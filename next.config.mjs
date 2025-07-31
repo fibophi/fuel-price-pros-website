@@ -17,7 +17,7 @@ const nextConfig = {
         ],
         destination: 'https://fuelprice.pro/:path*',
         permanent: true,
-        statusCode: 301, // Added for stronger redirect
+        statusCode: 301,
       },
     ]
   },
