@@ -1,133 +1,88 @@
-"use client"
+import { type NextRequest, NextResponse } from "next/server"
 
-import type React from "react"
+export async function POST(request: NextRequest) {
+  console.log("=== STARTER KIT API CALLED ===")
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+  try {
+    // Test 1: Can we parse the request?
+    const body = await request.json()
+    console.log("✅ Request parsed:", body)
 
-interface StarterKitPopupProps {
-  isOpen: boolean
-  onClose: () => void
-}
+    const { name, company, email } = body
 
-export function StarterKitPopup({ isOpen, onClose }: StarterKitPopupProps) {
-  const [formData, setFormData] = useState({
-    name: "",
-    company: "",
-    email: "",
-  })
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [message, setMessage] = useState("")
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-
-    setIsSubmitting(true)
-    setMessage("")
-
-    try {
-      console.log("Submitting form data:", formData)
-
-      const response = await fetch("/api/starter-kit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      })
-
-      console.log("Response status:", response.status)
-      console.log("Response ok:", response.ok)
-
-      const data = await response.json()
-      console.log("Response data:", data)
-
-      if (response.ok && (data.success || data.message)) {
-        setMessage("Success! You'll receive your Fuel Savings Starter Kit within 48 hours.")
-        setFormData({ name: "", company: "", email: "" })
-        setTimeout(() => {
-          onClose()
-          setMessage("")
-        }, 3000)
-      } else {
-        console.error("Server error:", data)
-        setMessage(data.error || data.message || "Failed to submit request. Please try again.")
-      }
-    } catch (error) {
-      console.error("Network error:", error)
-      setMessage("Network error. Please try again or contact us directly at info@fuelprice.pro")
-    } finally {
-      setIsSubmitting(false)
+    // Test 2: Do we have required fields?
+    if (!name || !company || !email) {
+      console.log("❌ Missing fields")
+      return NextResponse.json({ success: false, error: "Missing required fields" }, { status: 400 })
     }
+    console.log("✅ All fields present")
+
+    // Test 3: Do we have email credentials?
+    const hasEmailUser = !!process.env.EMAIL_USER
+    const hasEmailPass = !!process.env.EMAIL_PASS
+    console.log("Email credentials check:", { hasEmailUser, hasEmailPass })
+
+    if (!hasEmailUser || !hasEmailPass) {
+      console.log("❌ Missing email credentials")
+      return NextResponse.json({ success: false, error: "Email credentials missing" }, { status: 500 })
+    }
+    console.log("✅ Email credentials found")
+
+    // Test 4: Can we import nodemailer?
+    let nodemailer
+    try {
+      nodemailer = await import("nodemailer")
+      console.log("✅ Nodemailer imported")
+    } catch (importError) {
+      console.log("❌ Nodemailer import failed:", importError)
+      return NextResponse.json({ success: false, error: "Email service unavailable" }, { status: 500 })
+    }
+
+    // Test 5: Can we create transporter?
+    let transporter
+    try {
+      transporter = nodemailer.createTransporter({
+        service: "gmail",
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS,
+        },
+      })
+      console.log("✅ Transporter created")
+    } catch (transportError) {
+      console.log("❌ Transporter creation failed:", transportError)
+      return NextResponse.json({ success: false, error: "Email transporter failed" }, { status: 500 })
+    }
+
+    // Test 6: Can we verify connection?
+    try {
+      await transporter.verify()
+      console.log("✅ Email connection verified")
+    } catch (verifyError) {
+      console.log("❌ Email verification failed:", verifyError)
+      return NextResponse.json({ success: false, error: "Email connection failed" }, { status: 500 })
+    }
+
+    // Test 7: Can we send a simple email?
+    try {
+      const testEmail = {
+        from: process.env.EMAIL_USER,
+        to: "trincoinc@gmail.com",
+        subject: `🧪 TEST: Starter Kit Request from ${name}`,
+        text: `Test email for starter kit request from ${name} at ${company} (${email})`,
+      }
+
+      await transporter.sendMail(testEmail)
+      console.log("✅ Test email sent successfully")
+    } catch (emailError) {
+      console.log("❌ Email sending failed:", emailError)
+      return NextResponse.json({ success: false, error: "Email sending failed" }, { status: 500 })
+    }
+
+    console.log("🎉 ALL TESTS PASSED")
+    return NextResponse.json({ success: true, message: "Test completed successfully" }, { status: 200 })
+  } catch (error) {
+    console.error("💥 CRITICAL ERROR:", error)
+    return NextResponse.json({ success: false, error: "Critical server error" }, { status: 500 })
   }
-
-  return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="text-navy">Get Your Fuel Savings Starter Kit</DialogTitle>
-          <DialogDescription>
-            Enter your details below and we'll send you our comprehensive fuel savings guide within 48 hours.
-          </DialogDescription>
-        </DialogHeader>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="popup-name">Name *</Label>
-            <Input
-              id="popup-name"
-              value={formData.name}
-              onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="popup-company">Company Name *</Label>
-            <Input
-              id="popup-company"
-              value={formData.company}
-              onChange={(e) => setFormData((prev) => ({ ...prev, company: e.target.value }))}
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="popup-email">Email Address *</Label>
-            <Input
-              id="popup-email"
-              type="email"
-              value={formData.email}
-              onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
-              required
-            />
-          </div>
-
-          {message && (
-            <div
-              className={`text-center text-sm p-3 rounded ${
-                message.includes("Success")
-                  ? "text-green-700 bg-green-50 border border-green-200"
-                  : "text-red-700 bg-red-50 border border-red-200"
-              }`}
-            >
-              {message}
-            </div>
-          )}
-
-          <div className="flex gap-2">
-            <Button type="button" variant="outline" onClick={onClose} className="flex-1 bg-transparent">
-              Cancel
-            </Button>
-            <Button type="submit" disabled={isSubmitting} className="flex-1 bg-orange hover:bg-orange/90">
-              {isSubmitting ? "Submitting..." : "Request Kit"}
-            </Button>
-          </div>
-        </form>
-      </DialogContent>
-    </Dialog>
-  )
 }
