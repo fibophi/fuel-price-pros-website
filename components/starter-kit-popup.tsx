@@ -29,6 +29,8 @@ export function StarterKitPopup({ isOpen, onClose }: StarterKitPopupProps) {
     setMessage("")
 
     try {
+      console.log("Submitting form data:", formData)
+
       const response = await fetch("/api/starter-kit", {
         method: "POST",
         headers: {
@@ -37,9 +39,13 @@ export function StarterKitPopup({ isOpen, onClose }: StarterKitPopupProps) {
         body: JSON.stringify(formData),
       })
 
-      const data = await response.json()
+      console.log("Response status:", response.status)
+      console.log("Response ok:", response.ok)
 
-      if (response.ok && data.success) {
+      const data = await response.json()
+      console.log("Response data:", data)
+
+      if (response.ok && (data.success || data.message)) {
         setMessage("Success! You'll receive your Fuel Savings Starter Kit within 48 hours.")
         setFormData({ name: "", company: "", email: "" })
         setTimeout(() => {
@@ -47,9 +53,11 @@ export function StarterKitPopup({ isOpen, onClose }: StarterKitPopupProps) {
           setMessage("")
         }, 3000)
       } else {
-        setMessage(data.error || "Failed to submit request. Please try again.")
+        console.error("Server error:", data)
+        setMessage(data.error || data.message || "Failed to submit request. Please try again.")
       }
     } catch (error) {
+      console.error("Network error:", error)
       setMessage("Network error. Please try again or contact us directly at info@fuelprice.pro")
     } finally {
       setIsSubmitting(false)
@@ -123,3 +131,6 @@ export function StarterKitPopup({ isOpen, onClose }: StarterKitPopupProps) {
     </Dialog>
   )
 }
+
+// Make sure we export it as default as well
+export default StarterKitPopup
