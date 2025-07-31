@@ -29,6 +29,8 @@ export function StarterKitPopup({ isOpen, onClose }: StarterKitPopupProps) {
     setMessage("")
 
     try {
+      console.log("Submitting form data:", formData)
+
       const response = await fetch("/api/starter-kit", {
         method: "POST",
         headers: {
@@ -37,7 +39,13 @@ export function StarterKitPopup({ isOpen, onClose }: StarterKitPopupProps) {
         body: JSON.stringify(formData),
       })
 
-      if (response.ok) {
+      console.log("Response status:", response.status)
+      console.log("Response ok:", response.ok)
+
+      const data = await response.json()
+      console.log("Response data:", data)
+
+      if (response.ok && (data.success || data.message)) {
         setMessage("Success! You'll receive your Fuel Savings Starter Kit within 48 hours.")
         setFormData({ name: "", company: "", email: "" })
         setTimeout(() => {
@@ -45,10 +53,12 @@ export function StarterKitPopup({ isOpen, onClose }: StarterKitPopupProps) {
           setMessage("")
         }, 3000)
       } else {
-        setMessage("Failed to submit request. Please try again.")
+        console.error("Server error:", data)
+        setMessage(data.error || data.message || "Failed to submit request. Please try again.")
       }
     } catch (error) {
-      setMessage("An error occurred. Please try again.")
+      console.error("Network error:", error)
+      setMessage("Network error. Please try again or contact us directly at info@fuelprice.pro")
     } finally {
       setIsSubmitting(false)
     }
@@ -97,7 +107,13 @@ export function StarterKitPopup({ isOpen, onClose }: StarterKitPopupProps) {
           </div>
 
           {message && (
-            <div className={`text-center text-sm ${message.includes("Success") ? "text-green-600" : "text-red-600"}`}>
+            <div
+              className={`text-center text-sm p-3 rounded ${
+                message.includes("Success")
+                  ? "text-green-700 bg-green-50 border border-green-200"
+                  : "text-red-700 bg-red-50 border border-red-200"
+              }`}
+            >
               {message}
             </div>
           )}
