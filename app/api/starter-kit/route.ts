@@ -16,17 +16,49 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: "Email service unavailable" }, { status: 500 })
     }
 
-    // Create transporter
-    const transporter = nodemailer.createTransporter({
+    // Create transporter - FIXED: createTransport (not createTransporter)
+    const transporter = nodemailer.createTransport({
       service: "gmail",
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false, // Use TLS
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
       },
+      tls: {
+        rejectUnauthorized: false,
+      },
     })
 
-    // Verify connection
-    await transporter.verify()
+    // Test connection with better error handling
+    try {
+      await transporter.verify()
+      console.log("✅ Email connection verified")
+    } catch (verifyError) {
+      console.error("❌ Email verification failed:", verifyError)
+
+      // Provide specific error messages
+      if (verifyError.code === "EAUTH") {
+        return NextResponse.json(
+          {
+            success: false,
+            error: "Gmail authentication failed. Please check your app password.",
+            details: "Make sure you're using a Gmail App Password, not your regular password.",
+          },
+          { status: 500 },
+        )
+      }
+
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Email service connection failed",
+          details: verifyError.message,
+        },
+        { status: 500 },
+      )
+    }
 
     // Save to Google Sheets if webhook exists
     if (process.env.GOOGLE_SHEETS_WEBHOOK_URL) {
@@ -42,8 +74,9 @@ export async function POST(request: NextRequest) {
             source: "Starter Kit Request",
           }),
         })
+        console.log("✅ Saved to Google Sheets")
       } catch (sheetError) {
-        console.error("Google Sheets error:", sheetError)
+        console.error("⚠️ Google Sheets error (continuing anyway):", sheetError)
       }
     }
 
@@ -123,12 +156,14 @@ export async function POST(request: NextRequest) {
       `,
     })
 
+    console.log("✅ All emails sent successfully")
+
     return NextResponse.json({
       success: true,
       message: "Request submitted successfully",
     })
   } catch (error) {
-    console.error("Starter kit error:", error)
+    console.error("❌ Starter kit error:", error)
     return NextResponse.json(
       {
         success: false,
