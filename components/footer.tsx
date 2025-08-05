@@ -61,7 +61,7 @@ export function Footer() {
               </div>
               <div className="flex items-center space-x-2">
                 <Mail className="h-4 w-4 text-orange" />
-                <span className="text-blue-100">info@fuelprice.pro</span>
+                <span className="text-blue-100">discounts@fuelprice.pro</span>
               </div>
               <div className="flex items-center space-x-2">
                 <MapPin className="h-4 w-4 text-orange" />
