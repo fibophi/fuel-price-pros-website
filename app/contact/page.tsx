@@ -292,7 +292,7 @@ export default function ContactPage() {
                     <Mail className="h-5 w-5 text-orange" />
                     <div>
                       <div className="font-semibold">Email</div>
-                      <div className="text-gray-600">info@fuelprice.pro</div>
+                      <div className="text-gray-600">discounts@fuelprice.pro</div>
                     </div>
                   </div>
                   <div className="flex items-center space-x-3">
