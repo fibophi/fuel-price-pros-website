@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: "Email service unavailable" }, { status: 500 })
     }
 
-    // Create transporter - FIXED: createTransport (not createTransporter)
+    // Create transporter
     const transporter = nodemailer.createTransport({
       service: "gmail",
       host: "smtp.gmail.com",
@@ -145,7 +145,7 @@ export async function POST(request: NextRequest) {
           <div style="background-color: #002F6C; color: white; padding: 20px; text-align: center;">
             <h3>Questions? Need immediate help?</h3>
             <p>📞 Call us: <strong>647-362-6649</strong></p>
-            <p>📧 Email us: <strong>info@fuelprice.pro</strong></p>
+            <p>📧 Email us: <strong>discounts@fuelprice.pro</strong></p>
             <p>🌐 Visit: <strong>fuelprice.pro</strong></p>
           </div>
           
@@ -167,7 +167,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: "Failed to submit request. Please try again or contact us directly at info@fuelprice.pro",
+        error: "Failed to submit request. Please try again or contact us directly at discounts@fuelprice.pro",
         details: error instanceof Error ? error.message : String(error),
       },
       { status: 500 },
