@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: "trincoinc@gmail.com",
-      subject: `New Contact Form Submission from ${name} - ${company}`,
+      subject: `FUEL New Contact Form Submission from ${name} - ${company}`,
       html: `
         <h2>New Contact Form Submission</h2>
         <p><strong>Name:</strong> ${name}</p>
